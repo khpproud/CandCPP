@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RxAndroidSample</string>
+    <string name="str_btn_scheduler">Scheduler</string>
+    <string name="str_btn_polling">Polling</string>
+    <string name="str_btn_hello">Hello</string>
+    <string name="btn_start">Start</string>
+    <string name="str_btn_observer">Click Observer</string>
+    <string name="hello">Hello world</string>
+    <string name="str_btn_recycle">recyclerview</string>
+    <string name="debounce_title">300ms 내에 입력되는 button click은 스킵한다.</string>
+</resources>
