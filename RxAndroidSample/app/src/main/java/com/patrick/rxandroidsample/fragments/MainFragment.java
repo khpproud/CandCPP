@@ -48,6 +48,18 @@ public class MainFragment extends Fragment {
         startDemo(new DebounceSearchFragment());
     }
 
+    @OnClick(R.id.btn_recycler_view)
+    void demoRecyclerView() { startDemo(new RecyclerViewFragment()); }
+
+    @OnClick(R.id.btn_polling)
+    void demoPolling() { startDemo(new PollingFragment()); }
+
+    @OnClick(R.id.btn_volley)
+    void demoVolley() { startDemo(new VolleyFragment()); }
+
+    @OnClick(R.id.btn_okHttp)
+    void demoOkHttp() { startDemo(new OkHttpFragment()); }
+
     private void startDemo(Fragment fragment) {
         final String TAG = fragment.getClass().getSimpleName();
         getActivity().getSupportFragmentManager().beginTransaction()

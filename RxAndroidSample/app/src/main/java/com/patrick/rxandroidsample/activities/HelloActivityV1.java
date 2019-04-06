@@ -16,6 +16,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
+// 메모리 누수 해결 방법 1 : Disposable 인터페이스를 이용하여 명시적 자원 해제
 public class HelloActivityV1 extends AppCompatActivity {
     private static final String TAG = HelloActivityV1.class.getSimpleName();
 
