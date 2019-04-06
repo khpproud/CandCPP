@@ -18,6 +18,18 @@ public class Log {
         System.out.println(getThreadName() + " | error = " + t);
     }
     
+    public static <T> void d(String tag, T t) { 
+        System.out.println(getThreadName() + " | " + tag + " | debug = " + t);
+    }
+
+    public static <T> void e(String tag, T t) { 
+        System.out.println(getThreadName() + " | " + tag + " | error = " + t);                
+    }
+
+    public static <T> void i(String tag, T t) { 
+        System.out.println(getThreadName() + " | " + tag + " | value = " + t);
+    }
+    
     public static <T> void it(T t) {
         long time = System.currentTimeMillis() - CommonUtils.startTime;
         System.out.println(getThreadName() + " | " + time + " | " + "value = " + t);
