@@ -22,8 +22,23 @@ public class OkHttpHelper {
             return res.body().string();
         } catch (IOException e) {
             Log.e(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         }
-        return "NO Response Message!!!";
+    }
+    
+    public static String getT(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        
+        try {
+            Response res = client.newCall(request).execute();
+            return res.body().string();
+        } catch (IOException e) {
+            Log.et(e.getMessage());
+            //e.printStackTrace();
+            throw e;
+        }
     }
 }
