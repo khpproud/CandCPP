@@ -10,15 +10,20 @@ import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -58,8 +63,17 @@ public class MainActivity extends AppCompatActivity {
                     mStockDataAdapter.add(stockUpdate);
                 });
 
-        demo();
-        demo2();
+        //demo();
+        //demo2();
+        //demo3();
+        //demo4();
+        //demo5();
+        //latest();
+        //debounce();
+        //buffer();
+        //completable();
+        //single();
+        maybe();
     }
 
     public void demo() {
@@ -123,6 +137,77 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(s -> log("subscribe()", s));
     }
 
+    // BackPressure 예
+    private void demo3() {
+        PublishSubject<Integer> observable = PublishSubject.create();
+
+        observable.range(1, 1_000_000)
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+    }
+
+    // Flowable로 Observable 변환
+    private void demo4() {
+        Flowable.range(1, 1_000_000)
+                .onBackpressureBuffer()
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+
+    }
+
+    // 아이템 버리기
+    private void demo5() {
+        Flowable.range(1, 1_000_000)
+                .sample(5, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+    }
+
+    // 마지막 값만 유지하기
+    private void latest() {
+        Flowable.range(1, 1_000_000)
+                .onBackpressureLatest()
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+    }
+
+    // 마지막 값만 주기적으로 가져오기 debounce()
+    private void debounce() {
+        Flowable.range(1, 1_000_000)
+                .debounce(10, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+    }
+
+    // buffer 사용
+    private void buffer() {
+        Flowable.range(1, 1_000_000)
+                .onBackpressureBuffer(10)
+                .observeOn(Schedulers.computation())
+                .subscribe(v -> log(TAG, v.toString()), this::log);
+    }
+
+    // Completable 사용 예
+    private void completable() {
+        Completable.fromAction(() -> {
+            log("Let's do something!!!");
+        }).subscribe(() -> log("Finished"), this::log);
+    }
+
+    // Single 시용 예
+    private void single() {
+        Single.just("Item")
+                .subscribe(this::log, this::log);
+    }
+
+    // Maybe 사용 예
+    private void maybe() {
+        Maybe.just("Item")
+                .subscribe(s -> log("success : " + s),
+                        this::log,
+                        () -> log("onComplete"));
+    }
+
     private void log(String stage, String item) {
         Log.d(TAG, stage + " : " + Thread.currentThread().getName() + " : " + item);
     }
@@ -130,4 +215,6 @@ public class MainActivity extends AppCompatActivity {
     private void log(String stage) {
         Log.d(TAG, stage + " : " + Thread.currentThread().getName());
     }
+
+    private void log(Throwable e) { Log.e(TAG, "Error : " + e.getMessage()); }
 }
