@@ -1,0 +1,24 @@
+package com.patrick.rxstudy07.storio;
+
+// SQLite DB에 저장할 항목 table, column 명세 작성
+public class StockUpdateTable {
+    public static final String TABLE = "stock_updates";
+
+    static class Columns {
+        static final String ID = "_id";
+        static final String STOCK_SYMBOL = "stock_symbol";
+        static final String PRICE = "price";
+        static final String DATE = "date";
+    }
+
+    private StockUpdateTable() { }
+
+    static String createTableQuery() {
+        return "CREATE TABLE " + TABLE + "("
+                + Columns.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Columns.STOCK_SYMBOL + " TEXT NOT NULL, "
+                + Columns.DATE + " LONG NOT NULL, "
+                + Columns.PRICE + " LONG NOT NULL"
+                + ");";
+    }
+}
