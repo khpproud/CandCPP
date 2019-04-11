@@ -10,13 +10,13 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_URL', '"https://www.worldtradingdata.com"'
-        buildConfigField 'String', 'API_KEY', '"aVioWIRCayUVLghD6mFRAdndDzWt1WSj8LMsgt6l4vkcpd8KZOLsrHDbY8Qw"'
+        buildConfigField 'String', 'BASE_URL', '""'
+        buildConfigField 'String', 'API_KEY', '""'
 
-        buildConfigField 'String', 'CONSUMER_KEY', '"eqZvLwGvYRagndREdkwRz9ky0"'
-        buildConfigField 'String', 'CONSUMER_SECRET', '"jHpBdG8T6Vlh3Iijb9CQqvN1eDzKX8SuN49uHppQZ1azNJhNwV"'
-        buildConfigField 'String', 'ACCESS_TOKEN', '"1115948129310765056-ERiqw0IIAWsXWDipSuChskjdXY9DbM"'
-        buildConfigField 'String', 'ACCESS_TOKEN_SECRET', '"duK5BY8Rq47WbeYSbUAqF0MmBlH0j6p45qDd7lzOqRjVB"'
+        buildConfigField 'String', 'CONSUMER_KEY', '""'
+        buildConfigField 'String', 'CONSUMER_SECRET', '""'
+        buildConfigField 'String', 'ACCESS_TOKEN', '""'
+        buildConfigField 'String', 'ACCESS_TOKEN_SECRET', '""'
     }
     buildTypes {
         release {

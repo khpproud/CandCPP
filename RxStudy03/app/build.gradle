@@ -10,8 +10,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_URL', '"https://www.alphavantage.co"'
-        buildConfigField 'String', 'API_KEY', '"OHC8CKWJG2CDNZGT"'
+        buildConfigField 'String', 'BASE_URL', '""'
+        buildConfigField 'String', 'API_KEY', '""'
     }
     buildTypes {
         release {
@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
 
+    // RxJava 1.x -> 2.x
     implementation 'com.github.akarnokd:rxjava2-interop:0.13.5'
 
     // Retrofit

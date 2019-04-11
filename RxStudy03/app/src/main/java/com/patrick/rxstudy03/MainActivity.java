@@ -10,13 +10,12 @@ import android.widget.TextView;
 import com.patrick.rxstudy03.stock.AlphavantageService;
 import com.patrick.rxstudy03.stock.RetrofitStockServiceFactory;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -78,7 +77,10 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.d(TAG, "New update " + stockUpdate.getStockSymbol());
 //                    mStockDataAdapter.add(stockUpdate);
 //                });
-
+        //demo();
+        //demo2();
+        //subscribeOn();
+        observeOn();
     }
 
 
@@ -91,4 +93,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void log(Throwable e) { Log.e(TAG, "Error : " + e.getMessage()); }
+
+    private void demo() {
+        // RxJava 1.x
+        rx.Observable.just("One", "Two", "Three")
+                .doOnNext(i -> log("doOnNext()" ,i))
+                .subscribe(i -> log("subscribe()", i));
+
+        // RxJava 1.x -> 2.x
+        RxJavaInterop.toV2Observable(rx.Observable.just("One", "Two", "Three"))
+                .doOnNext(i -> log("doOnNext()", i))
+                .subscribe(i -> log("subscribe", i));
+    }
+
+    private void demo2() {
+        v2(rx.Observable.just("One", "Two", "Three"))
+                .doOnNext(i -> log("doOnNext", i))
+                .subscribe(i -> log("subscribe()", i));
+
+        RxJavaInterop.toV2Flowable(rx.Observable.just("One", "Two", "Three"))
+                .doOnNext(i -> log("doOnNExt()", i))
+                .subscribe(i -> log("subscribe()", i));
+    }
+
+    private void subscribeOn() {
+        Observable.just("1", "3", "5")
+                .subscribeOn(Schedulers.single())
+                .doOnNext(i -> log("doOnNext()", i))
+                .subscribeOn(Schedulers.newThread())
+                .doOnNext(i -> log("doOnNext()", i))
+                .subscribeOn(Schedulers.io())
+                .subscribe(i -> log("Subscribe()", i));
+    }
+
+    private void observeOn() {
+        Observable.just("1", "3", "5")
+                .doOnNext(i -> log("doOnNext()", i))
+                .observeOn(Schedulers.newThread())
+                .doOnNext(i -> log("doOnNext()", i))
+                .observeOn(Schedulers.computation())
+                .subscribe(i -> log("subscribe()", i));
+    }
+
+    private static <T> Observable<T> v2(rx.Observable<T> source) {
+        return RxJavaInterop.toV2Observable(source);
+    }
 }

@@ -10,8 +10,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'BASE_URL', '"https://www.worldtradingdata.com"'
-        buildConfigField 'String', 'API_KEY', '"aVioWIRCayUVLghD6mFRAdndDzWt1WSj8LMsgt6l4vkcpd8KZOLsrHDbY8Qw"'
+        buildConfigField 'String', 'BASE_URL', '""'
+        buildConfigField 'String', 'API_KEY', '""'
     }
     buildTypes {
         release {
