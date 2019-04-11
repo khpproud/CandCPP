@@ -19,6 +19,8 @@ public class StockUpdateViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.stock_item_symbol)
     TextView mStockSymbol;
+    @BindView(R.id.stock_item_twitter_status)
+    TextView mTwitterStatus;
     @BindView(R.id.stock_item_price)
     TextView mPrice;
     @BindView(R.id.stock_item_date)
@@ -38,5 +40,21 @@ public class StockUpdateViewHolder extends RecyclerView.ViewHolder {
     }
     public void setDate(Date date) {
         mDate.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss", date));
+    }
+    public void setTwitterStatus(String twitterStatus) {
+        mTwitterStatus.setText(twitterStatus);
+    }
+
+    // Stock 상태 업데이트 인지 Twitter Status 업데이트 메시지 유형에 따른 뷰 업데이트
+    public void setIsStatusUpdate(boolean twitterStatusUpdate) {
+        if (twitterStatusUpdate) {
+            mTwitterStatus.setVisibility(View.VISIBLE);
+            mPrice.setVisibility(View.GONE);
+            mStockSymbol.setVisibility(View.GONE);
+        } else {
+            mTwitterStatus.setVisibility(View.GONE);
+            mPrice.setVisibility(View.VISIBLE);
+            mStockSymbol.setVisibility(View.VISIBLE);
+        }
     }
 }

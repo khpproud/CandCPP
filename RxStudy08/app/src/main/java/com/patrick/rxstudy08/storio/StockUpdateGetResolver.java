@@ -24,10 +24,12 @@ public class StockUpdateGetResolver extends DefaultGetResolver<StockUpdate> {
                 cursor.getColumnIndexOrThrow(StockUpdateTable.Columns.PRICE));
         final String stockSymbol = cursor.getString(
                 cursor.getColumnIndexOrThrow(StockUpdateTable.Columns.STOCK_SYMBOL));
+        final String twitterStatus = cursor.getString(
+                cursor.getColumnIndexOrThrow(StockUpdateTable.Columns.TWITTER_STATUS));
         Date date = getDate(dateLong);
         BigDecimal price = getPrice(priceLong);
 
-        final StockUpdate stockUpdate = new StockUpdate(stockSymbol, price, date);
+        final StockUpdate stockUpdate = new StockUpdate(stockSymbol, price, date, twitterStatus);
         stockUpdate.setId(id);
         return stockUpdate;
     }

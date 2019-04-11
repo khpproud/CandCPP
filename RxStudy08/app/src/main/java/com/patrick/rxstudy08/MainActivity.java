@@ -83,28 +83,47 @@ public class MainActivity extends AppCompatActivity {
         List<String> symbols = Arrays.asList("MSFT", "AAPL", "GOOGL");
         String key = BuildConfig.API_KEY;
 
-        // 서비스 쿼리를 구독
-        mDisposable = Observable.interval(0, 20, TimeUnit.SECONDS)
-                .flatMap(i -> Observable.<String>error(new RuntimeException("Oops")))
+        // 트위터 구성(authentication setting)
+        final Configuration configuration = new ConfigurationBuilder()
+                // 디버깅 설정
+                .setDebugEnabled(BuildConfig.DEBUG)
+                // key 설정
+                .setOAuthConsumerKey(BuildConfig.CONSUMER_KEY)
+                .setOAuthConsumerSecret(BuildConfig.CONSUMER_SECRET)
+                .setOAuthAccessToken(BuildConfig.ACCESS_TOKEN)
+                .setOAuthAccessTokenSecret(BuildConfig.ACCESS_TOKEN_SECRET)
+                .build();
+
+        // 수신할 유형의 필터 정의
+        final FilterQuery filterQuery = new FilterQuery()
+                .track("Google", "Microsoft", "Apple")
+                .language("en", "kr");
+
+        // 주식 정보 Observable 과 TwitterStream Observable 을 merge
+        mDisposable = Observable.merge(
+                Observable.interval(10, TimeUnit.SECONDS)
+                        .flatMap(i -> Observable.fromIterable(symbols)
+                            .reduce((symbol1, symbol2) -> symbol1 + "," + symbol2).toObservable())
+                        .flatMap(symbol -> stockService.stockQuery(symbol, key).toObservable())
+                        .flatMap(result -> Observable.fromIterable(result.getData()))
+                        .map(StockUpdate::create),
+                observeTwitterStream(configuration, filterQuery)
+                        // 수신 속도 조절
+                        .sample(3, TimeUnit.SECONDS)
+                        .map(StockUpdate::create)
+        )
                 .subscribeOn(Schedulers.io())
-                // Toast 를 띄우기 위해 Android main 스레드로 흐름 이동
+                .doOnError(ErrorHandler.get())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(error -> {
-                    log("doOnError()", "error");
-                    Toast.makeText(MainActivity.this,
-                            "We couldn't reach internet - falling back to local data",
-                            Toast.LENGTH_SHORT).show();
-                })
+                .doOnError(error ->
+                        Toast.makeText(this,
+                                "We couldn't reach internet - falling back to local data",
+                                Toast.LENGTH_SHORT).show())
                 .observeOn(Schedulers.io())
-                .flatMap(i -> Observable.fromIterable(symbols)
-                    .reduce((symbol1, symbol2) -> symbol1 + "," + symbol2).toObservable())
-                .flatMap(symbol -> stockService.stockQuery(symbol, key).toObservable())
-                .flatMap(r -> Observable.fromIterable(r.getData()))
-                .map(StockUpdate::create)
                 .doOnNext(this::saveStockUpdate)
                 .onExceptionResumeNext(
                         StorIOFactory.get(this)
-                        // StorIO 에게 SELECT 쿼리 작성을 시작하도록 지시
+                        // StorIO 에게 SELECT 쿼리 작성을 시작하도록 함
                         .get()
                         // 반환될 객체 유형 지정
                         .listOfObjects(StockUpdate.class)
@@ -116,26 +135,25 @@ public class MainActivity extends AppCompatActivity {
                                 .orderBy("date DESC")
                                 .limit(10)
                                 .build())
-                         // 쿼리 구성이 완료 됐음을 알림
+                        // 쿼리 구성이 완료 됐음을 알림
                         .prepare()
-                        .asRxFlowable(BackpressureStrategy.LATEST)
-                        .take(1)
+                        .asRxSingle()
                         .toObservable()
-                        .flatMap(Observable::fromIterable)
-                )
+                        .flatMap(Observable::fromIterable))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data ->  {
-                    log("New update => " + data.getStockSymbol() + " : " + data.getPrice());
-                    mNoDataAvailableView.setVisibility(View.GONE);
-                    mStockDataAdapter.add(data);
-                }, error -> {
-                    log("onError...");
-                    if (mStockDataAdapter.getItemCount() == 0)
-                        mNoDataAvailableView.setVisibility(View.VISIBLE);
-                });
+                        log("New update => " + data.getStockSymbol() + " : " + data.getPrice());
+                        mNoDataAvailableView.setVisibility(View.GONE);
+                        mStockDataAdapter.add(data);
+                        mRecyclerView.smoothScrollToPosition(0);
+                        }, error -> {
+                            log("onError...");
+                            if (mStockDataAdapter.getItemCount() == 0)
+                                mNoDataAvailableView.setVisibility(View.VISIBLE);
+                        });
 
         //customObservable();
-        cleanObservable();
+        //cleanObservable();
     }
 
     @Override
