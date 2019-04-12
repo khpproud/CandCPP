@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.preference.EditTextPreference
+        android:key="pref_symbols"
+        android:summary="Stock Symbols to Follow"
+        android:title="Symbols"
+        android:defaultValue="AAPL MSFT GOOGL"/>
+    <androidx.preference.EditTextPreference
+        android:key="pref_keywords"
+        android:summary="Twitter keywords to monitor"
+        android:title="Keywords"
+        android:defaultValue="Google Microsoft Apple"/>
+</androidx.preference.PreferenceScreen>
