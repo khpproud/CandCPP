@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestSchedulerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-05-05T07:49:17" hostname="baggwanghyeon-ui-MacBook-Pro.local" time="0.065">
+  <properties/>
+  <testcase name="TestScheduler실행" classname="TestSchedulerTest" time="0.065"/>
+  <system-out><![CDATA[data = []
+data = [0]
+data = [0, 1]
+data = [0, 1, 2, 3]testScheduler#now = 2000
+테스트에 걸린 시간 = 63
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
